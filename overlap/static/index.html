@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overlap</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,200,0,0" />
+  <style>
+    :root {
+      --bg: #EFEFEF;
+      --surface: #FFFFFF;
+      --surface-subtle: #F6F6F7;
+      --ink: #1A1A1A;
+      --ink-muted: #8A8A8A;
+      --violet: #6C4CF5;
+      --violet-light: #E4DEFF;
+      --sunshine: #FFC93C;
+      --lime: #C9DB7E;
+      --blush: #FF5A5A;
+      --radius-card: 28px;
+      --radius-pill: 9999px;
+      --radius-phone: 44px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    input, textarea {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .material-symbols-rounded {
+      font-variation-settings: "wght" 200, "opsz" 24;
+      font-weight: 200;
+    }
+
+    /* THE PHONE DEVICE CONTAINER */
+    .phone-shell {
+      user-select: none;
+      -webkit-user-select: none;
+      width: 410px;
+      max-width: 100%;
+      height: 840px;
+      max-height: 94vh;
+      background: #FFFFFF;
+      border-radius: var(--radius-phone);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 30px 70px -15px rgba(0,0,0,0.12), 0 0 0 10px #E5E5E5;
+      overflow: hidden;
+    }
+
+    /* HEADER INSIDE PHONE */
+    .app-header {
+      padding: 1.4rem 1.4rem 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #FFFFFF;
+      z-index: 10;
+    }
+    .profile-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .avatar-circle {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--violet);
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .profile-meta .name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .profile-meta .team {
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+    .bell-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #F4F4F4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      position: relative;
+    }
+    .bell-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--blush);
+      border-radius: 50%;
+      position: absolute;
+      top: 10px;
+      right: 11px;
+      border: 1.5px solid #FFFFFF;
+    }
+
+    /* SCROLLABLE VIEWPORT */
+    .viewport {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.4rem 1.4rem 1.5rem;
+      background: #FAFAFA;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+    .viewport::-webkit-scrollbar { display: none; }
+
+    /* PILL TABS + PERSISTENT ADD BUTTON */
+    .tab-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 0.2rem;
+    }
+    .pill-tabs {
+      background: #EFEFEF;
+      padding: 0.3rem;
+      border-radius: var(--radius-pill);
+      display: flex;
+      gap: 0.3rem;
+    }
+    .pill-tab-btn {
+      padding: 0.45rem 1.15rem;
+      border-radius: var(--radius-pill);
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: transparent;
+      color: var(--ink-muted);
+      transition: all 0.2s;
+    }
+    .pill-tab-btn.active {
+      background: var(--ink);
+      color: #FFFFFF;
+    }
+    .add-round-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--violet);
+      color: #FFFFFF;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(108, 76, 245, 0.3);
+      transition: transform 0.15s;
+    }
+    .add-round-btn:hover { transform: scale(1.05); }
+
+    /* DISPLAY HEADLINES */
+    .display-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 1.05;
+      color: var(--ink);
+    }
+    .screen-subtitle {
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+
+    /* FEATURE CARD (-3deg tilt) */
+    .feature-card-tilted {
+      background: var(--ink);
+      color: #FFFFFF;
+      border-radius: var(--radius-card);
+      padding: 1.35rem 1.4rem;
+      transform: rotate(-3deg);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      box-shadow: 0 16px 32px rgba(0,0,0,0.12);
+      position: relative;
+      margin-top: 0.4rem;
+    }
+    .feature-card-tilted:hover {
+      transform: rotate(0deg);
+    }
+    .feature-headline {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.9rem;
+      line-height: 1.22;
+    }
+    .feature-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* CLEAR INFORMATIVE STATUS BADGES (NOT CTAs) */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ink-muted);
+      background: transparent;
+      padding: 0;
+    }
+    .status-indicator-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+    .status-indicator-dot.office { background: var(--violet); }
+    .status-indicator-dot.remote { background: #8DA628; }
+    .status-indicator-dot.event { background: var(--sunshine); }
+
+    /* AVATAR STACK */
+    .avatar-stack {
+      display: flex;
+      align-items: center;
+    }
+    .av-thumb {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #111;
+      margin-left: -8px;
+      background: #E5E5E5;
+    }
+    .av-thumb:first-child { margin-left: 0; }
+    .av-thumb.more {
+      background: var(--ink);
+      color: #FFF;
+      font-size: 0.65rem;
+    }
+
+    /* STACKED DAY CARDS */
+    .days-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-top: 0.4rem;
+    }
+    .day-card {
+      border-radius: var(--radius-card);
+      padding: 1.15rem 1.35rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+    }
+    .day-left-meta {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .day-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .day-card:hover { transform: translateY(-2px); }
+
+    .day-left-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .status-icon-bubble {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    .status-icon-bubble.office { background: #F1EDFF; color: var(--violet); }
+    .status-icon-bubble.remote { background: #F4F8E5; color: #647514; }
+    .status-icon-bubble.off { background: #E5E7EB; color: #6B7280; }
+
+    .day-text .title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    .day-text .subtitle {
+      font-size: 0.8rem;
+      color: var(--ink);
+      font-weight: 600;
+      margin-top: 0.12rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .day-text .micro-status {
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+      font-weight: 500;
+      margin-top: 0.1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .arrow-round-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #F4F4F4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      border: none;
+    }
+
+    /* DAY DETAIL HIERARCHY */
+    .detail-top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .round-icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #F4F4F4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* HERO DECISION CARD (PRIMARY ACTION IN DAY DETAIL) */
+    .hero-plan-card {
+      background: #FFFFFF;
+      border-radius: 24px;
+      padding: 1.4rem 1.35rem 1.5rem;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 1.35rem;
+    }
+    .hero-plan-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .hero-plan-status {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--ink-muted);
+    }
+    .hero-plan-actions {
+      display: flex;
+      gap: 0.65rem;
+    }
+    .choice-btn {
+      flex: 1;
+      padding: 0.78rem 0.5rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.82rem;
+      font-weight: 700;
+      border: 1.5px solid #EAEAEA;
+      background: #FFFFFF;
+      color: var(--ink);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      transition: all 0.15s ease;
+    }
+    .choice-btn.active-office {
+      background: var(--ink);
+      color: #FFFFFF;
+      border-color: var(--ink);
+    }
+    .choice-btn.active-remote {
+      background: #F4F8E5;
+      color: #4C5911;
+      border-color: #D3E689;
+    }
+
+    /* DAY DETAIL CONTENT SECTIONS */
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      margin: 0.4rem 0 0.1rem;
+    }
+
+    .list-row {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      cursor: pointer;
+    }
+    .join-lilac-btn {
+      background: var(--violet-light);
+      color: var(--violet);
+      border: none;
+      padding: 0.4rem 0.85rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .join-lilac-btn.joined {
+      background: #EAEAEA;
+      color: var(--ink-muted);
+    }
+
+    /* TEAM CALENDAR & SEGMENTED FILTER */
+    .date-strip {
+      display: flex;
+      justify-content: space-between;
+      background: #FFFFFF;
+      padding: 0.5rem 0.6rem;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .date-circle {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--ink-muted);
+    }
+    .date-circle.selected {
+      background: var(--violet);
+      color: #FFFFFF;
+    }
+
+    /* SEGMENTED CONTROL FOR AUDIENCE FILTER */
+    .segmented-control {
+      background: #EAEAEA;
+      border-radius: var(--radius-pill);
+      padding: 0.25rem;
+      display: flex;
+      gap: 0.25rem;
+    }
+    .segmented-item {
+      flex: 1;
+      text-align: center;
+      padding: 0.45rem 0.4rem;
+      font-size: 0.76rem;
+      font-weight: 700;
+      white-space: nowrap;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: transparent;
+      color: var(--ink-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+    }
+    .segmented-item.active {
+      background: #FFFFFF;
+      color: var(--ink);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .timeline-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 0.9rem 1.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+
+    /* PLAN YOUR WEEK BOTTOM SHEET */
+    .sheet-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 50;
+      display: none;
+      align-items: flex-end;
+    }
+    .bottom-sheet {
+      width: 100%;
+      background: #FFFFFF;
+      border-radius: 36px 36px 0 0;
+      padding: 1.8rem 1.6rem 2.2rem;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      animation: slideUp 0.25s ease-out;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .plan-day-pills-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .plan-pill {
+      background: #F4F4F4;
+      border-radius: var(--radius-pill);
+      padding: 0.8rem 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.92rem;
+      transition: all 0.2s;
+    }
+    .plan-pill.office { background: var(--violet); color: #FFF; }
+    .plan-pill.remote { background: var(--lime); color: #111; }
+    .plan-pill.off { background: #E5E7EB; color: #4B5563; }
+
+    /* TOGGLE COMPONENT */
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 26px;
+      background: #E5E5E5;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle-switch.on { background: var(--violet); }
+    .toggle-switch-handle {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: #FFFFFF;
+      border-radius: 50%;
+      transition: transform 0.2s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .toggle-switch.on .toggle-switch-handle { transform: translateX(18px); }
+
+    .btn-black-cta {
+      background: var(--ink);
+      color: #FFF;
+      border: none;
+      padding: 0.95rem 1.4rem;
+      border-radius: var(--radius-pill);
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SINGLE PHONE SHELL -->
+  <div class="phone-shell">
+
+    <!-- HEADER INSIDE PHONE -->
+    <header class="app-header">
+      <div class="profile-group">
+        <div class="avatar-circle">MC</div>
+        <div class="profile-meta">
+          <div class="name">Maya Chen</div>
+          <div class="team">Design team · HQ</div>
+        </div>
+      </div>
+      <button class="bell-btn" title="Notifications">
+        <span class="material-symbols-rounded" style="font-size:22px; color:var(--ink);">notifications</span>
+        <div class="bell-dot"></div>
+      </button>
+    </header>
+
+    <!-- SCREEN 1: HOME ("Who's in this week") -->
+    <main id="screen-home" class="viewport">
+      <!-- Pill Tabs & Persistent Add Button -->
+      <div class="tab-row">
+        <div class="pill-tabs">
+          <button class="pill-tab-btn active" onclick="switchScreen('home')">My Week</button>
+          <button class="pill-tab-btn" onclick="switchScreen('team')">Team Schedule</button>
+        </div>
+        <button class="add-round-btn" onclick="openPlanSheet()" title="Plan your week">
+          <span class="material-symbols-rounded" style="font-size:22px;">add</span>
+        </button>
+      </div>
+
+      <!-- Display Title -->
+      <div>
+        <h1 class="display-title">Who's in<br>this week</h1>
+      </div>
+
+      <!-- Feature Card (-3deg tilt) -->
+      <div class="feature-card-tilted" onclick="openDayDetail('Wednesday')">
+        <div class="feature-headline" id="feat-headline">Best day: Wednesday.<br>5 of your favorites are in</div>
+        <div class="feature-footer">
+          <div class="avatar-stack" id="feat-avatars"></div>
+          <div style="text-align:right;">
+            <div style="font-size:0.85rem; font-weight:700; color:#FFF;">Peak overlap ✨</div>
+            <div style="font-size:0.72rem; color:rgba(255,255,255,0.7);">5 of 5 favourites in</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stacked Day Cards Mon–Fri -->
+      <div class="days-stack" id="days-stack-container"></div>
+    </main>
+
+    <!-- SCREEN 2: DAY DETAIL (WITH CLEAR HIERARCHY) -->
+    <main id="screen-detail" class="viewport" style="display:none;">
+      <div class="detail-top-nav">
+        <button class="round-icon-btn" onclick="switchScreen('home')">
+          <span class="material-symbols-rounded">arrow_back</span>
+        </button>
+        <div style="font-size:0.85rem; font-weight:700; color:var(--ink-muted);">Day Detail</div>
+        <button class="add-round-btn" style="width:36px; height:36px;" onclick="openPlanSheet()" title="Plan your week">
+          <span class="material-symbols-rounded" style="font-size:18px;">add</span>
+        </button>
+      </div>
+
+      <!-- Day Title & Context -->
+      <div>
+        <h1 class="display-title" id="det-day-title">Wednesday</h1>
+        <div class="screen-subtitle" id="det-date-str">Wed 19 Jun · HQ</div>
+      </div>
+
+      <!-- PRIMARY ACTION: HERO STATUS CARD -->
+      <div class="hero-plan-card">
+        <div class="hero-plan-header">
+          <span class="section-label" style="margin:0;">YOUR PLAN FOR THIS DAY</span>
+          <span class="status-badge" id="det-current-status-label">
+            <span class="status-indicator-dot office" id="det-status-dot"></span>
+            <span id="det-status-text">Attending Office</span>
+          </span>
+        </div>
+        <div class="hero-plan-actions">
+          <button class="choice-btn active-office" id="btn-choice-office" onclick="setDayStatus('OFFICE')">
+            <span class="material-symbols-rounded" style="font-size:18px;">apartment</span>
+            I'm in Office
+          </button>
+          <button class="choice-btn" id="btn-choice-remote" onclick="setDayStatus('REMOTE')">
+            <span class="material-symbols-rounded" style="font-size:18px;">home</span>
+            Work Remote
+          </button>
+        </div>
+      </div>
+
+      <!-- SECONDARY: SCHEDULED ANCHOR EVENTS -->
+      <div class="section-label">Anchor Events</div>
+      <div style="display:flex; flex-direction:column; gap:0.55rem;" id="det-events-container">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- TERTIARY: WHO'S IN SUMMARY (Click leads to Team Schedule) -->
+      <div class="section-label">Office Attendance</div>
+      <div class="list-row" onclick="switchScreen('team')" style="border: 1px solid rgba(0,0,0,0.04);">
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+          <div class="avatar-stack" id="det-avatar-stack"></div>
+          <div>
+            <div style="font-weight:700; font-size:0.92rem;"><span id="det-office-count">10</span> on the floor</div>
+            <div style="font-size:0.76rem; color:var(--ink-muted);" id="det-my-people-subtitle">5 favourites (all from Design) + 5 other colleagues</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.3rem; color:var(--violet); font-size:0.8rem; font-weight:700;">
+          <span>See roster</span>
+          <span class="material-symbols-rounded" style="font-size:18px;">chevron_right</span>
+        </div>
+      </div>
+
+      <!-- NUDGE PREFERENCE -->
+      <div class="section-label">Preferences</div>
+      <div class="list-row">
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+          <span class="material-symbols-rounded" style="font-size:22px; color:var(--ink-muted);">notifications</span>
+          <div style="font-weight:700; font-size:0.88rem;">Remind me the night before</div>
+        </div>
+        <div class="toggle-switch on" onclick="this.classList.toggle('on')">
+          <div class="toggle-switch-handle"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- SCREEN 3: TEAM CALENDAR (WITH CLEAR SEGMENTED AUDIENCE) -->
+    <main id="screen-team" class="viewport" style="display:none;">
+      <div class="tab-row">
+        <div class="pill-tabs">
+          <button class="pill-tab-btn" onclick="switchScreen('home')">My Week</button>
+          <button class="pill-tab-btn active" onclick="switchScreen('team')">Team Schedule</button>
+        </div>
+        <button class="add-round-btn" onclick="openPlanSheet()" title="Plan your week">
+          <span class="material-symbols-rounded" style="font-size:22px;">add</span>
+        </button>
+      </div>
+
+      <div>
+        <h1 class="display-title">Team<br>schedule</h1>
+      </div>
+
+      <!-- Date Strip (Mon-Fri) -->
+      <div class="date-strip">
+        <div class="date-circle" onclick="selectTeamDate('Monday', this)"><span>Mon</span><span>17</span></div>
+        <div class="date-circle" onclick="selectTeamDate('Tuesday', this)"><span>Tue</span><span>18</span></div>
+        <div class="date-circle selected" onclick="selectTeamDate('Wednesday', this)"><span>Wed</span><span>19</span></div>
+        <div class="date-circle" onclick="selectTeamDate('Thursday', this)"><span>Thu</span><span>20</span></div>
+        <div class="date-circle" onclick="selectTeamDate('Friday', this)"><span>Fri</span><span>21</span></div>
+      </div>
+
+      <!-- CLEAR SEGMENTED FILTER FOR AUDIENCE SCOPE -->
+      <div class="segmented-control">
+        <button class="segmented-item active" id="filter-my-people" onclick="setTeamFilter('my_people')">
+          Favourites&nbsp;·&nbsp;5
+        </button>
+        <button class="segmented-item" id="filter-design" onclick="setTeamFilter('design')">
+          Design&nbsp;·&nbsp;6
+        </button>
+        <button class="segmented-item" id="filter-everyone" onclick="setTeamFilter('everyone')">
+          All&nbsp;·&nbsp;11
+        </button>
+      </div>
+
+      <!-- Teammates Timeline Container -->
+      <div style="display:flex; flex-direction:column; gap:0.55rem;" id="team-timeline-container"></div>
+    </main>
+
+    <!-- PLAN YOUR WEEK (Bottom Sheet) -->
+    <div class="sheet-backdrop" id="plan-sheet-backdrop" onclick="closePlanSheet(event)">
+      <div class="bottom-sheet" onclick="event.stopPropagation()">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h2 style="font-size:1.45rem; font-weight:800; letter-spacing:-0.02em;">Plan your week</h2>
+            <div style="font-size:0.8rem; color:var(--ink-muted); margin-top:0.2rem;">Tap each day to cycle status</div>
+          </div>
+          <button class="round-icon-btn" onclick="closePlanSheet()">
+            <span class="material-symbols-rounded">close</span>
+          </button>
+        </div>
+
+        <div class="plan-day-pills-row" id="plan-pills-container"></div>
+
+        <div class="list-row" style="background:#F7F7F8; padding:0.75rem 1rem;">
+          <span style="font-weight:700; font-size:0.88rem;">Repeat every week</span>
+          <div class="toggle-switch on" onclick="this.classList.toggle('on')">
+            <div class="toggle-switch-handle"></div>
+          </div>
+        </div>
+
+        <div style="font-size:0.8rem; color:var(--ink-muted); text-align:center;">
+          Most of your people are in Wed &amp; Thu
+        </div>
+
+        <button class="btn-black-cta" onclick="savePlanSheet()">Save plan</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentSummary = null;
+    let selectedDay = "Wednesday";
+    let currentDayDetail = null;
+    let activeFilter = 'my_people';
+    let tempDayPlans = {};
+
+    async function initApp() {
+      await loadWeeklySummary();
+    }
+
+    async function loadWeeklySummary() {
+      const res = await fetch('/api/week-summary');
+      currentSummary = await res.json();
+      renderHome(currentSummary);
+    }
+
+    function renderHome(data) {
+      const bd = data.best_day;
+      const avContainer = document.getElementById('feat-avatars');
+      avContainer.innerHTML = '';
+      bd.avatars.forEach(av => {
+        const span = document.createElement('span');
+        span.className = 'av-thumb';
+        span.textContent = av;
+        avContainer.appendChild(span);
+      });
+      const plusSpan = document.createElement('span');
+      plusSpan.className = 'av-thumb more';
+      plusSpan.textContent = `+${Math.max(0, bd.total_in_office - bd.avatars.length)}`;
+      avContainer.appendChild(plusSpan);
+
+      const stack = document.getElementById('days-stack-container');
+      stack.innerHTML = '';
+      data.days.forEach(d => {
+        const card = document.createElement('div');
+        const st = d.user_status.toLowerCase();
+        card.className = 'day-card';
+        card.onclick = () => openDayDetail(d.day);
+
+        const iconName = st === 'office' ? 'apartment' : (st === 'remote' ? 'home' : 'event_busy');
+        card.innerHTML = `
+          <div class="day-left-meta">
+            <div class="status-icon-bubble ${st}">
+              <span class="material-symbols-rounded">${iconName}</span>
+            </div>
+            <div class="day-text">
+              <div class="title">${d.day}</div>
+              <div class="subtitle">${d.my_people_count} of 5 favourites in</div>
+              <div class="micro-status">${d.microcopy}</div>
+            </div>
+          </div>
+          <button class="arrow-round-btn">
+            <span class="material-symbols-rounded" style="font-size:18px;">north_east</span>
+          </button>
+        `;
+        stack.appendChild(card);
+      });
+    }
+
+    async function openDayDetail(dayName) {
+      selectedDay = dayName;
+      switchScreen('detail');
+
+      const res = await fetch(`/api/day/${dayName}`);
+      currentDayDetail = await res.json();
+
+      document.getElementById('det-day-title').textContent = currentDayDetail.day;
+      document.getElementById('det-date-str').textContent = `${currentDayDetail.date_str} · ${currentDayDetail.office_location}`;
+      document.getElementById('det-office-count').textContent = currentDayDetail.attendee_counts.office;
+      document.getElementById('det-my-people-subtitle').textContent = `${currentDayDetail.attendee_counts.my_people_in_office} of your 5 favourites (Design) are in`;
+
+      updateDayDetailHeroChoice(currentDayDetail.user_status);
+
+      // Render Avatar stack
+      const avBox = document.getElementById('det-avatar-stack');
+      avBox.innerHTML = '';
+      currentDayDetail.office_attendees.slice(0, 3).forEach(m => {
+        const span = document.createElement('span');
+        span.className = 'av-thumb';
+        span.textContent = m.avatar;
+        avBox.appendChild(span);
+      });
+      if (currentDayDetail.office_attendees.length > 3) {
+        const plus = document.createElement('span');
+        plus.className = 'av-thumb more';
+        plus.textContent = `+${currentDayDetail.office_attendees.length - 3}`;
+        avBox.appendChild(plus);
+      }
+
+      // Render Anchor Events
+      const evBox = document.getElementById('det-events-container');
+      evBox.innerHTML = '';
+      if (currentDayDetail.events.length === 0) {
+        evBox.innerHTML = `<div style="font-size:0.82rem; color:var(--ink-muted); padding:0.4rem 0;">No team events scheduled for this day.</div>`;
+      } else {
+        currentDayDetail.events.forEach(ev => {
+          const row = document.createElement('div');
+          row.className = 'list-row';
+          const emojiIcon = ev.emoji || (ev.title.toLowerCase().includes('design') ? '🎨' : (ev.title.toLowerCase().includes('lunch') || ev.title.toLowerCase().includes('pizza') ? '🍕' : '📌'));
+          row.innerHTML = `
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <div style="font-size:1.3rem;">${emojiIcon}</div>
+              <div>
+                <div style="font-weight:700; font-size:0.86rem;">${ev.title}</div>
+                <div style="font-size:0.72rem; color:var(--ink-muted);">${ev.time} · ${ev.location}</div>
+              </div>
+            </div>
+            ${ev.joinable ? `<button class="join-lilac-btn" onclick="toggleJoin(this, event)">Join</button>` : `<span class="status-badge"><span class="status-indicator-dot event"></span>Confirmed</span>`}
+          `;
+          evBox.appendChild(row);
+        });
+      }
+    }
+
+    function toggleJoin(btn, e) {
+      e.stopPropagation();
+      if (btn.classList.contains('joined')) {
+        btn.classList.remove('joined');
+        btn.textContent = 'Join';
+      } else {
+        btn.classList.add('joined');
+        btn.textContent = 'Joined ✓';
+      }
+    }
+
+    function updateDayDetailHeroChoice(status) {
+      const isOffice = (status === 'OFFICE');
+      const btnOffice = document.getElementById('btn-choice-office');
+      const btnRemote = document.getElementById('btn-choice-remote');
+      const dot = document.getElementById('det-status-dot');
+      const label = document.getElementById('det-status-text');
+
+      if (isOffice) {
+        btnOffice.className = 'choice-btn active-office';
+        btnRemote.className = 'choice-btn';
+        dot.className = 'status-indicator-dot office';
+        label.textContent = 'Attending in Office';
+      } else {
+        btnOffice.className = 'choice-btn';
+        btnRemote.className = 'choice-btn active-remote';
+        dot.className = 'status-indicator-dot remote';
+        label.textContent = 'Working Remote';
+      }
+    }
+
+    async function setDayStatus(status) {
+      updateDayDetailHeroChoice(status);
+      await fetch('/api/plan', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ day: selectedDay, status: status })
+      });
+      await loadWeeklySummary();
+    }
+
+    async function selectTeamDate(dayName, el) {
+      document.querySelectorAll('.date-circle').forEach(d => d.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedDay = dayName;
+
+      const res = await fetch(`/api/day/${dayName}`);
+      currentDayDetail = await res.json();
+      renderTeamTimeline();
+    }
+
+    function setTeamFilter(filterKey) {
+      activeFilter = filterKey;
+      ['my_people', 'design', 'everyone'].forEach(k => {
+        document.getElementById(`filter-${k.replace('_', '-')}`).classList.toggle('active', k === filterKey);
+      });
+      renderTeamTimeline();
+    }
+
+    function renderTeamTimeline() {
+      if (!currentDayDetail) return;
+      const container = document.getElementById('team-timeline-container');
+      container.innerHTML = '';
+
+      let list = [];
+      const allMembers = [...currentDayDetail.office_attendees, ...currentDayDetail.remote_attendees, ...currentDayDetail.off_attendees];
+
+      if (activeFilter === 'my_people') {
+        list = allMembers.filter(m => m.is_my_people);
+      } else if (activeFilter === 'design') {
+        list = allMembers.filter(m => m.team === 'Design');
+      } else {
+        list = allMembers;
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = `<div style="font-size:0.85rem; color:var(--ink-muted); text-align:center; padding:1.5rem 0;">No teammates matching this filter.</div>`;
+        return;
+      }
+
+      list.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'timeline-card';
+        const isOffice = (m.status === 'OFFICE');
+        const isRemote = (m.status === 'REMOTE');
+
+        const statusLabel = isOffice ? `in from ${m.in_time || '09:00'}` : (isRemote ? 'Remote' : 'Off');
+        const dotClass = isOffice ? 'office' : (isRemote ? 'remote' : 'off');
+
+        div.innerHTML = `
+          <div style="display:flex; align-items:center; gap:0.65rem;">
+            <div class="av-thumb" style="margin-left:0; background:${isOffice ? '#F1EDFF' : '#F4F8E5'}; color:${isOffice ? 'var(--violet)' : '#647514'};">
+              ${m.avatar}
+            </div>
+            <div>
+              <div style="font-weight:700; font-size:0.88rem;">${m.name}</div>
+              <div style="font-size:0.74rem; color:var(--ink-muted);">${m.role} · ${m.team}</div>
+            </div>
+          </div>
+          <div class="status-badge">
+            <span class="status-indicator-dot ${dotClass}"></span>
+            <span>${statusLabel}</span>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function openPlanSheet() {
+      const container = document.getElementById('plan-pills-container');
+      container.innerHTML = '';
+      tempDayPlans = {};
+
+      currentSummary.days.forEach(d => {
+        tempDayPlans[d.day] = d.user_status;
+        const pill = document.createElement('div');
+        pill.id = `pill-${d.day}`;
+        const st = d.user_status.toLowerCase();
+        pill.className = `plan-pill ${st}`;
+        pill.innerHTML = `
+          <span>${d.day}</span>
+          <span style="font-size:0.75rem; font-weight:700; background:#FFF; color:#111; padding:0.25rem 0.65rem; border-radius:var(--radius-pill);">${d.user_status}</span>
+        `;
+        pill.onclick = () => cyclePlanStatus(d.day);
+        container.appendChild(pill);
+      });
+
+      document.getElementById('plan-sheet-backdrop').style.display = 'flex';
+    }
+
+    function cyclePlanStatus(day) {
+      const cycle = ["OFFICE", "REMOTE", "OFF"];
+      const curr = tempDayPlans[day] || "OFFICE";
+      const next = cycle[(cycle.indexOf(curr) + 1) % cycle.length];
+      tempDayPlans[day] = next;
+
+      const pill = document.getElementById(`pill-${day}`);
+      pill.className = `plan-pill ${next.toLowerCase()}`;
+      pill.querySelector('span:last-child').textContent = next;
+    }
+
+    async function savePlanSheet() {
+      for (const [day, status] of Object.entries(tempDayPlans)) {
+        await fetch('/api/plan', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ day: day, status: status })
+        });
+      }
+      closePlanSheet();
+      await loadWeeklySummary();
+      if (currentDayDetail) {
+        openDayDetail(selectedDay);
+      }
+    }
+
+    function closePlanSheet(e) {
+      document.getElementById('plan-sheet-backdrop').style.display = 'none';
+    }
+
+    function switchScreen(screenId) {
+      ['home', 'detail', 'team'].forEach(s => {
+        const el = document.getElementById(`screen-${s}`);
+        if (el) el.style.display = (s === screenId) ? 'flex' : 'none';
+      });
+      if (screenId === 'team') {
+        const wed = document.querySelectorAll('.date-circle')[2];
+        if (wed) selectTeamDate('Wednesday', wed);
+      }
+    }
+
+    initApp();
+  </script>
+</body>
+</html>
