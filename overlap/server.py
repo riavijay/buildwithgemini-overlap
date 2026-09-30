@@ -50,7 +50,9 @@ class ChatRequest(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_index():
-    with open("/config/Desktop/BuildWithGemini/overlap/static/index.html", "r") as f:
+    import os
+    file_path = os.path.join(os.path.dirname(__file__), "static", "index.html")
+    with open(file_path, "r") as f:
         return HTMLResponse(content=f.read())
 
 @app.get("/api/week-summary")
